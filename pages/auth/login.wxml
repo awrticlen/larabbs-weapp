@@ -6,7 +6,7 @@
 
     <view class="weui-cells__title">LaraBBS 用户登录</view>
     <view class="weui-cells weui-cells_after-title">
-      <view class="weui-cell weui-cell_input {{hasError ? 'weui-cell_warn' : ''}}">
+      <view class="weui-cell weui-cell_input {{errors.username ? 'weui-cell_warn' : ''}}">
         <view class="weui-cell__hd">
           <view class="weui-label">用户名</view>
         </view>
@@ -18,12 +18,15 @@
             bindinput="handleUsernameInput"
           />
         </view>
-        <view wx:if="{{hasError}}" class="weui-cell__ft">
+        <view wx:if="{{errors.username}}" class="weui-cell__ft">
           <icon type="warn" size="23" color="#fa5151" />
         </view>
       </view>
+      <view wx:if="{{errors.username}}" class="field-error">
+        {{errors.username}}
+      </view>
 
-      <view class="weui-cell weui-cell_input {{hasError ? 'weui-cell_warn' : ''}}">
+      <view class="weui-cell weui-cell_input {{errors.password ? 'weui-cell_warn' : ''}}">
         <view class="weui-cell__hd">
           <view class="weui-label">密码</view>
         </view>
@@ -36,9 +39,12 @@
             bindinput="handlePasswordInput"
           />
         </view>
-        <view wx:if="{{hasError}}" class="weui-cell__ft">
+        <view wx:if="{{errors.password}}" class="weui-cell__ft">
           <icon type="warn" size="23" color="#fa5151" />
         </view>
+      </view>
+      <view wx:if="{{errors.password}}" class="field-error">
+        {{errors.password}}
       </view>
     </view>
 
