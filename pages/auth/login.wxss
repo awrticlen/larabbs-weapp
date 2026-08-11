@@ -1,0 +1,11 @@
+.login-page {
+  padding: 0 0 32rpx;
+}
+
+.login-wrap {
+  margin-top: 90rpx;
+}
+
+.login-page .weui-toptips {
+  display: block;
+}

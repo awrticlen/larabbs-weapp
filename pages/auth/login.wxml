@@ -1,0 +1,56 @@
+<view class="page login-page">
+  <view class="page__bd login-wrap">
+    <view wx:if="{{errorMessage}}" class="weui-toptips weui-toptips_warn">
+      {{errorMessage}}
+    </view>
+
+    <view class="weui-cells__title">LaraBBS 用户登录</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input {{hasError ? 'weui-cell_warn' : ''}}">
+        <view class="weui-cell__hd">
+          <view class="weui-label">用户名</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            placeholder="手机号或邮箱"
+            value="{{form.username}}"
+            bindinput="handleUsernameInput"
+          />
+        </view>
+        <view wx:if="{{hasError}}" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#fa5151" />
+        </view>
+      </view>
+
+      <view class="weui-cell weui-cell_input {{hasError ? 'weui-cell_warn' : ''}}">
+        <view class="weui-cell__hd">
+          <view class="weui-label">密码</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            type="password"
+            placeholder="输入密码"
+            value="{{form.password}}"
+            bindinput="handlePasswordInput"
+          />
+        </view>
+        <view wx:if="{{hasError}}" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#fa5151" />
+        </view>
+      </view>
+    </view>
+
+    <view class="weui-btn-area">
+      <button
+        class="weui-btn weui-btn_primary"
+        loading="{{submitting}}"
+        disabled="{{submitting}}"
+        bindtap="submit"
+      >
+        登录
+      </button>
+    </view>
+  </view>
+</view>
