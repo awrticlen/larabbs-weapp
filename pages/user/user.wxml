@@ -1,8 +1,27 @@
 <view class="page user-page">
   <view class="page__bd">
     <view class="weui-panel weui-panel_access">
-      <view wx:if="{{loggedIn}}" class="weui-panel__hd">
-        已登录
+      <view wx:if="{{loggedIn}}" class="user-panel">
+        <view class="weui-panel__hd">已登录</view>
+        <view class="weui-panel__bd">
+          <view class="weui-media-box weui-media-box_text">
+            <view class="weui-media-box__title">{{user.name}}</view>
+            <view wx:if="{{user.phone}}" class="weui-media-box__desc">{{user.phone}}</view>
+            <view wx:if="{{user.email}}" class="weui-media-box__desc">{{user.email}}</view>
+          </view>
+        </view>
+        <view wx:if="{{errorMessage}}" class="logout-error">{{errorMessage}}</view>
+        <view class="logout-area">
+          <button
+            class="weui-btn weui-btn_warn logout-button"
+            size="mini"
+            loading="{{loggingOut}}"
+            disabled="{{loggingOut}}"
+            bindtap="logout"
+          >
+            退出登录
+          </button>
+        </view>
       </view>
       <navigator
         wx:else

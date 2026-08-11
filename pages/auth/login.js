@@ -1,6 +1,4 @@
-const { login } = require('../../api/auth')
-const { hasValidToken, saveToken } = require('../../utils/auth')
-const { login: getLoginCode } = require('../../utils/wechat')
+const { normalizeLoginForm, validateLoginForm } = require('../../utils/validation')
 
 const getErrorMessage = (error) => {
   const response = error && error.response
@@ -10,20 +8,11 @@ const getErrorMessage = (error) => {
     return data.message
   }
 
-  return '登录失败，请稍后重试'
-}
-
-const loginWithCode = async (credentials = {}) => {
-  const loginData = await getLoginCode()
-
-  if (!loginData.code) {
-    throw new Error('微信登录没有返回 code')
+  if (error && error.message) {
+    return error.message
   }
 
-  return login({
-    ...credentials,
-    code: loginData.code
-  })
+  return '登录失败，请稍后重试'
 }
 
 Page({
@@ -32,48 +21,53 @@ Page({
       username: '',
       password: ''
     },
-    hasError: false,
+    errors: {},
     errorMessage: '',
-    submitting: false
+    submitting: false,
+    restoring: false
   },
 
   handleUsernameInput(event) {
-    this.setData({
-      'form.username': event.detail.value
-    })
+    this.clearFieldError('username', event.detail.value)
   },
 
   handlePasswordInput(event) {
+    this.clearFieldError('password', event.detail.value)
+  },
+
+  clearFieldError(field, value) {
     this.setData({
-      'form.password': event.detail.value
+      [`form.${field}`]: value,
+      [`errors.${field}`]: '',
+      errorMessage: ''
     })
   },
 
   async submit() {
-    const { username, password } = this.data.form
+    if (this.data.submitting) {
+      return
+    }
+
+    const form = normalizeLoginForm(this.data.form)
+    const validation = validateLoginForm(form)
 
     this.setData({
-      hasError: false,
-      errorMessage: ''
+      form,
+      errors: validation.errors,
+      errorMessage: validation.firstError
     })
 
-    if (!username || !password) {
-      this.setData({
-        hasError: true,
-        errorMessage: '请填写账户名和密码'
-      })
+    if (!validation.valid) {
       return
     }
 
     this.setData({ submitting: true })
 
     try {
-      const response = await loginWithCode({ username, password })
-      saveToken(response.data)
+      await getApp().login(form)
       wx.navigateBack()
     } catch (error) {
       this.setData({
-        hasError: true,
         errorMessage: getErrorMessage(error)
       })
     } finally {
@@ -82,17 +76,27 @@ Page({
   },
 
   async onShow() {
-    if (hasValidToken()) {
+    const app = getApp()
+    const authState = app.syncAuthState()
+
+    if (authState.isLoggedIn) {
       wx.navigateBack()
       return
     }
 
+    if (!authState.accessToken || this.data.restoring) {
+      return
+    }
+
+    this.setData({ restoring: true })
+
     try {
-      const response = await loginWithCode()
-      saveToken(response.data)
+      await app.ensureAuth()
       wx.navigateBack()
     } catch (error) {
-      // 未绑定用户时，接口会返回错误；此时保留登录表单。
+      // 当前凭证无法恢复时，保留表单供用户重新绑定或登录。
+    } finally {
+      this.setData({ restoring: false })
     }
   }
 })

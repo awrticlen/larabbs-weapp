@@ -1,3 +1,5 @@
+const { getToken, getTokenExpiredAt } = require('./auth')
+
 const BASE_URL = 'http://larabbs.test/api/v1'
 
 const getErrorMessage = (response) => {
@@ -57,6 +59,53 @@ const request = (path, options = {}, showLoading = true) => {
   })
 }
 
+const getAppInstance = () => {
+  try {
+    return getApp()
+  } catch (error) {
+    return null
+  }
+}
+
+const ensureAuthToken = async () => {
+  const token = getToken()
+  const expiredAt = Number(getTokenExpiredAt())
+
+  if (!token) {
+    throw new Error('请先登录')
+  }
+
+  if (expiredAt && Date.now() >= expiredAt) {
+    const app = getAppInstance()
+
+    if (!app || typeof app.ensureAuth !== 'function') {
+      throw new Error('登录状态已过期')
+    }
+
+    await app.ensureAuth()
+  }
+
+  const currentToken = getToken()
+  if (!currentToken) {
+    throw new Error('登录状态已失效')
+  }
+
+  return currentToken
+}
+
+const authRequest = async (path, options = {}, showLoading = true) => {
+  const token = await ensureAuthToken()
+
+  return request(path, {
+    ...options,
+    header: {
+      ...(options.header || {}),
+      Authorization: `Bearer ${token}`
+    }
+  }, showLoading)
+}
+
 module.exports = {
+  authRequest,
   request
 }

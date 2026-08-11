@@ -2,3 +2,18 @@
 .user-page {
   padding: 0 0 32rpx;
 }
+
+.logout-area {
+  padding: 16rpx 32rpx 24rpx;
+}
+
+.logout-button {
+  margin: 0;
+}
+
+.logout-error {
+  padding: 0 32rpx;
+  color: #fa5151;
+  font-size: 26rpx;
+  line-height: 1.5;
+}
