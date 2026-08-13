@@ -1,0 +1,33 @@
+.register-page {
+  padding: 0 0 32rpx;
+}
+
+.register-wrap {
+  margin-top: 90rpx;
+}
+
+.register-page .weui-toptips {
+  display: block;
+}
+
+.error-message {
+  color: #fa5151;
+}
+
+.captcha-img {
+  width: 200rpx;
+  height: 80rpx;
+}
+
+.weui-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4999;
+}
+
+.captcha-dialog {
+  z-index: 5000;
+}

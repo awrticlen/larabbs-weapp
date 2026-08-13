@@ -48,6 +48,11 @@
       </view>
     </view>
 
+    <view class="weui-cells__tips">
+      如果你还没有 LaraBBS 用户可以
+      <navigator class="register-link" url="/pages/auth/register">注册新用户</navigator>
+    </view>
+
     <view class="weui-btn-area">
       <button
         class="weui-btn weui-btn_primary"

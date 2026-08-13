@@ -8,6 +8,14 @@ const login = (data) => request('weapp/authorizations', {
   data
 })
 
+const getCaptcha = (phone) => request('captchas', {
+  method: 'POST',
+  header: {
+    Accept: 'application/json'
+  },
+  data: { phone }
+})
+
 const refresh = (token) => request('authorizations/current', {
   method: 'PUT',
   header: {
@@ -25,6 +33,7 @@ const logout = (token) => request('authorizations/current', {
 }, false)
 
 module.exports = {
+  getCaptcha,
   login,
   logout,
   refresh

@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/user/user",
-    "pages/auth/login"
+    "pages/auth/login",
+    "pages/auth/register"
   ],
   "window": {
     "backgroundColor": "#f7f8fa",

@@ -1,0 +1,85 @@
+<view class="page register-page">
+  <view class="page__bd register-wrap">
+    <view wx:if="{{errorMessage}}" class="weui-toptips weui-toptips_warn">
+      {{errorMessage}}
+    </view>
+
+    <view class="weui-cells__title">LaraBBS 手机注册</view>
+
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_vcode {{errors.phone ? 'weui-cell_warn' : ''}}">
+        <view class="weui-cell__bd">
+          <input
+            disabled="{{phoneDisabled}}"
+            class="weui-input"
+            type="number"
+            placeholder="请输入手机号"
+            value="{{form.phone}}"
+            bindinput="handlePhoneInput"
+          />
+        </view>
+        <view class="weui-cell__ft">
+          <icon wx:if="{{errors.phone}}" type="warn" size="23" color="#fa5151" />
+          <view class="weui-vcode-btn" bindtap="getCaptchaCode">获取验证码</view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{errors.phone}}" class="weui-cells__tips error-message">
+      {{errors.phone}}
+    </view>
+
+    <view class="weui-btn-area">
+      <button
+        class="weui-btn weui-btn_primary"
+        loading="{{submitting}}"
+        disabled="{{submitting}}"
+        bindtap="submit"
+      >
+        注册
+      </button>
+    </view>
+  </view>
+
+  <view wx:if="{{captchaModalShow}}" class="weui-mask" bindtap="closeCaptchaModal"></view>
+  <view wx:if="{{captchaModalShow}}" class="weui-dialog captcha-dialog">
+    <view class="weui-dialog__hd">
+      <view class="weui-dialog__title">输入图片验证码</view>
+    </view>
+    <view class="weui-dialog__bd">
+      <view wx:if="{{errors.captchaCode}}" class="weui-cells__tips error-message">
+        {{errors.captchaCode}}
+      </view>
+      <view class="weui-cell weui-cell_input weui-cell_vcode">
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            placeholder="图片验证码"
+            value="{{captchaCode}}"
+            bindinput="handleCaptchaCodeInput"
+          />
+        </view>
+        <view class="weui-cell__ft">
+          <image
+            class="weui-vcode-img captcha-img"
+            src="{{captcha.imageContent}}"
+            bindtap="getCaptchaCode"
+          />
+        </view>
+      </view>
+    </view>
+    <view class="weui-dialog__ft">
+      <view
+        class="weui-dialog__btn weui-dialog__btn_default"
+        bindtap="closeCaptchaModal"
+      >
+        取消
+      </view>
+      <view
+        class="weui-dialog__btn"
+        bindtap="sendVerificationCode"
+      >
+        确定
+      </view>
+    </view>
+  </view>
+</view>

@@ -49,7 +49,51 @@ const normalizeLoginForm = (form = {}) => ({
   password: typeof form.password === 'string' ? form.password : ''
 })
 
+const mobilePattern = /^1[3-9]\d{9}$/
+
+const phoneRules = [
+  {
+    field: 'phone',
+    message: '请输入手机号',
+    isValid: (value) => typeof value === 'string' && value.trim().length > 0
+  },
+  {
+    field: 'phone',
+    message: '手机号格式不正确',
+    isValid: (value) => mobilePattern.test((value || '').trim())
+  }
+]
+
+const validatePhoneForm = (form = {}) => {
+  const errors = {}
+
+  phoneRules.some((rule) => {
+    if (errors[rule.field] || rule.isValid(form[rule.field])) {
+      return false
+    }
+
+    errors[rule.field] = rule.message
+    return false
+  })
+
+  const firstError = Object.keys(errors)
+    .map((field) => errors[field])
+    .find(Boolean) || ''
+
+  return {
+    errors,
+    firstError,
+    valid: Object.keys(errors).length === 0
+  }
+}
+
+const normalizePhoneForm = (form = {}) => ({
+  phone: typeof form.phone === 'string' ? form.phone.trim() : ''
+})
+
 module.exports = {
   normalizeLoginForm,
-  validateLoginForm
+  normalizePhoneForm,
+  validateLoginForm,
+  validatePhoneForm
 }
