@@ -3,16 +3,45 @@
   padding: 0 0 32rpx;
 }
 
-.logout-area {
-  padding: 16rpx 32rpx 24rpx;
+.user-profile {
+  min-height: 112rpx;
 }
 
-.logout-button {
-  margin: 0;
+.avatar-wrap {
+  position: relative;
+  margin-right: 20rpx;
+}
+
+.avatar {
+  display: block;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: #f1f1f1;
+}
+
+.user-name {
+  color: #333333;
+  font-size: 34rpx;
+  line-height: 1.5;
+}
+
+.introduction {
+  overflow: hidden;
+  margin-top: 4rpx;
+  color: #888888;
+  font-size: 26rpx;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logout {
+  margin-top: 30rpx;
 }
 
 .logout-error {
-  padding: 0 32rpx;
+  padding: 16rpx 32rpx 0;
   color: #fa5151;
   font-size: 26rpx;
   line-height: 1.5;

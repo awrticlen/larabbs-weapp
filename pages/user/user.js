@@ -13,7 +13,8 @@ Page({
 
     this.setData({
       loggedIn: authState.isLoggedIn,
-      user: authState.user
+      user: authState.user,
+      errorMessage: ''
     })
   },
 
