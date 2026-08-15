@@ -1,9 +1,10 @@
 const { diffForHumans } = require('../../utils/time')
-const { getTopics } = require('../../api/topic')
+const { getCategories, getTopics } = require('../../api/topic')
 
+const CATEGORY_STORAGE_KEY = 'categories'
 const DEFAULT_AVATAR = '/assets/images/user.png'
 
-const getErrorMessage = (error) => {
+const getErrorMessage = (error, fallback) => {
   const response = error && error.response
   const data = response && response.data
 
@@ -15,8 +16,20 @@ const getErrorMessage = (error) => {
     return error.message
   }
 
-  return '获取话题失败，请稍后重试'
+  return fallback
 }
+
+const normalizeCategoryId = (value) => {
+  const id = Number(value)
+  return Number.isInteger(id) && id > 0 ? id : null
+}
+
+const normalizeCategories = (categories) => (Array.isArray(categories) ? categories : [])
+  .map((category) => ({
+    id: normalizeCategoryId(category && category.id),
+    name: typeof (category && category.name) === 'string' ? category.name : ''
+  }))
+  .filter((category) => category.id && category.name)
 
 const normalizeTopic = (topic = {}) => {
   const user = topic.user || {}
@@ -35,8 +48,20 @@ const normalizeTopic = (topic = {}) => {
   }
 }
 
+const getTopicParams = (page, categoryId) => ({
+  page,
+  include: 'user,category',
+  ...(categoryId ? { 'filter[category_id]': categoryId } : {})
+})
+
 Page({
   data: {
+    categories: [],
+    currentCategoryId: null,
+    currentCategoryName: '话题',
+    categoryOpen: false,
+    categoryLoading: false,
+    categoryErrorMessage: '',
     topics: [],
     page: 1,
     noMoreData: false,
@@ -45,12 +70,13 @@ Page({
   },
 
   onLoad() {
+    this.loadCategories()
     this.loadTopics({ reset: true })
   },
 
   async onPullDownRefresh() {
     try {
-      await this.loadTopics({ reset: true })
+      await this.loadTopics({ reset: true, page: 1 })
     } finally {
       wx.stopPullDownRefresh()
     }
@@ -64,10 +90,78 @@ Page({
     this.loadTopics({ page: this.data.page + 1 })
   },
 
-  async loadTopics({ reset = false, page = this.data.page } = {}) {
-    if (this.data.isLoading) {
-      return false
+  toggleCategories() {
+    this.setData({
+      categoryOpen: !this.data.categoryOpen,
+      categoryErrorMessage: ''
+    })
+  },
+
+  async selectCategory(event) {
+    const categoryId = normalizeCategoryId(event.currentTarget.dataset.id)
+    const categoryName = categoryId ? event.currentTarget.dataset.name : '话题'
+
+    if (categoryId === this.data.currentCategoryId) {
+      this.setData({ categoryOpen: false })
+      return
     }
+
+    this.setData({
+      currentCategoryId: categoryId,
+      currentCategoryName: categoryName || '话题',
+      categoryOpen: false,
+      topics: [],
+      page: 1,
+      noMoreData: false,
+      errorMessage: ''
+    })
+
+    await this.loadTopics({
+      reset: true,
+      page: 1,
+      categoryId
+    })
+  },
+
+  async loadCategories() {
+    const cachedCategories = normalizeCategories(wx.getStorageSync(CATEGORY_STORAGE_KEY))
+
+    if (cachedCategories.length) {
+      this.setData({ categories: cachedCategories })
+      return cachedCategories
+    }
+
+    this.setData({
+      categoryLoading: true,
+      categoryErrorMessage: ''
+    })
+
+    try {
+      const response = await getCategories()
+      const categories = normalizeCategories(response.data && response.data.data)
+
+      wx.setStorageSync(CATEGORY_STORAGE_KEY, categories)
+      this.setData({ categories })
+
+      return categories
+    } catch (error) {
+      this.setData({
+        categoryErrorMessage: getErrorMessage(error, '获取分类失败，请稍后重试')
+      })
+
+      return []
+    } finally {
+      this.setData({ categoryLoading: false })
+    }
+  },
+
+  async loadTopics({
+    reset = false,
+    page = this.data.page,
+    categoryId = this.data.currentCategoryId
+  } = {}) {
+    const requestId = (this.topicRequestId || 0) + 1
+    this.topicRequestId = requestId
 
     this.setData({
       isLoading: true,
@@ -75,10 +169,12 @@ Page({
     })
 
     try {
-      const response = await getTopics({
-        page,
-        include: 'user,category'
-      })
+      const response = await getTopics(getTopicParams(page, categoryId))
+
+      if (requestId !== this.topicRequestId) {
+        return false
+      }
+
       const payload = response.data || {}
       const topics = Array.isArray(payload.data)
         ? payload.data.map(normalizeTopic)
@@ -99,13 +195,17 @@ Page({
 
       return true
     } catch (error) {
-      this.setData({
-        errorMessage: getErrorMessage(error)
-      })
+      if (requestId === this.topicRequestId) {
+        this.setData({
+          errorMessage: getErrorMessage(error, '获取话题失败，请稍后重试')
+        })
+      }
 
       return false
     } finally {
-      this.setData({ isLoading: false })
+      if (requestId === this.topicRequestId) {
+        this.setData({ isLoading: false })
+      }
     }
   }
 })

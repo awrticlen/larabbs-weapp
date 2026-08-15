@@ -8,6 +8,14 @@ const getTopics = (data = {}) => request('topics', {
   data
 }, false)
 
+const getCategories = () => request('categories', {
+  method: 'GET',
+  header: {
+    Accept: 'application/json'
+  }
+}, false)
+
 module.exports = {
+  getCategories,
   getTopics
 }

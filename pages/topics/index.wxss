@@ -6,6 +6,60 @@
   margin-top: 0;
 }
 
+.category-list {
+  overflow: hidden;
+  margin: 16rpx 24rpx;
+  border-radius: 8rpx;
+  background: #ffffff;
+}
+
+.category-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 96rpx;
+  padding: 0 30rpx;
+}
+
+.category-trigger_open {
+  background: #f7f8fa;
+}
+
+.category-icon {
+  width: 56rpx;
+  height: 56rpx;
+}
+
+.category-menu {
+  border-top: 1rpx solid #eeeeee;
+}
+
+.category-options {
+  margin-top: 0;
+}
+
+.category-option::before {
+  right: 30rpx;
+}
+
+.category-option_selected {
+  background: #eeeeee;
+}
+
+.category-loading,
+.category-error {
+  padding: 24rpx 30rpx;
+  font-size: 26rpx;
+}
+
+.category-loading {
+  color: #888888;
+}
+
+.category-error {
+  color: #fa5151;
+}
+
 .topics-page .weui-toptips {
   display: block;
 }

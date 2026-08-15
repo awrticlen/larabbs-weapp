@@ -1,5 +1,41 @@
 <view class="page topics-page">
   <view class="page__bd">
+    <view class="category-list">
+      <view
+        class="category-trigger {{categoryOpen ? 'category-trigger_open' : ''}}"
+        bindtap="toggleCategories"
+      >
+        <view class="page-title">{{currentCategoryName}}</view>
+        <image class="category-icon" src="/assets/images/category.png" mode="aspectFit" />
+      </view>
+
+      <view wx:if="{{categoryOpen}}" class="category-menu">
+        <view wx:if="{{categoryLoading}}" class="category-loading">加载分类中</view>
+        <view wx:elif="{{categoryErrorMessage}}" class="category-error" bindtap="loadCategories">
+          {{categoryErrorMessage}}，点击重试
+        </view>
+        <view wx:else class="weui-cells category-options">
+          <view
+            class="weui-cell weui-cell_access category-option {{!currentCategoryId ? 'category-option_selected' : ''}}"
+            data-id=""
+            bindtap="selectCategory"
+          >
+            <view class="weui-cell__bd">话题</view>
+          </view>
+          <block wx:for="{{categories}}" wx:key="id">
+            <view
+              class="weui-cell weui-cell_access category-option {{currentCategoryId == item.id ? 'category-option_selected' : ''}}"
+              data-id="{{item.id}}"
+              data-name="{{item.name}}"
+              bindtap="selectCategory"
+            >
+              <view class="weui-cell__bd">{{item.name}}</view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+
     <view wx:if="{{errorMessage}}" class="weui-toptips weui-toptips_warn">
       {{errorMessage}}
     </view>
