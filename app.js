@@ -1,20 +1,22 @@
-const { login: loginRequest, logout: logoutRequest, refresh: refreshRequest } = require('./api/auth')
+const { login: loginRequest, logout: logoutRequest, refresh: refreshRequest, register: registerRequest } = require('./api/auth')
 const { getCurrentUser } = require('./api/user')
 const auth = require('./utils/auth')
 const { login: getLoginCode } = require('./utils/wechat')
 
-const loginWithCode = async (credentials = {}) => {
+const getLoginParams = async (credentials = {}) => {
   const loginData = await getLoginCode()
 
   if (!loginData.code) {
     throw new Error('微信登录没有返回 code')
   }
 
-  return loginRequest({
+  return {
     ...credentials,
     code: loginData.code
-  })
+  }
 }
+
+const loginWithCode = async (credentials = {}) => loginRequest(await getLoginParams(credentials))
 
 App({
   globalData: {
@@ -55,6 +57,11 @@ App({
     await this.loadCurrentUser()
 
     return this.globalData.auth
+  },
+
+  async register(data = {}) {
+    await registerRequest(await getLoginParams(data))
+    return this.login()
   },
 
   async refresh() {

@@ -20,12 +20,76 @@
         </view>
         <view class="weui-cell__ft">
           <icon wx:if="{{errors.phone}}" type="warn" size="23" color="#fa5151" />
-          <view class="weui-vcode-btn" bindtap="getCaptchaCode">获取验证码</view>
+          <view class="weui-vcode-btn" bindtap="getCaptchaCode">
+            {{requestingCaptcha ? '获取中' : '获取验证码'}}
+          </view>
         </view>
       </view>
     </view>
     <view wx:if="{{errors.phone}}" class="weui-cells__tips error-message">
       {{errors.phone}}
+    </view>
+
+    <view class="weui-cells__title">短信验证码</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input {{errors.verification_code ? 'weui-cell_warn' : ''}}">
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            type="number"
+            placeholder="请输入短信验证码"
+            value="{{form.verification_code}}"
+            bindinput="handleVerificationCodeInput"
+          />
+        </view>
+        <view wx:if="{{errors.verification_code}}" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#fa5151" />
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{errors.verification_code}}" class="weui-cells__tips error-message">
+      {{errors.verification_code}}
+    </view>
+
+    <view class="weui-cells__title">姓名</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input {{errors.name ? 'weui-cell_warn' : ''}}">
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            placeholder="请输入姓名（英文、数字、横杆或下划线）"
+            value="{{form.name}}"
+            bindinput="handleNameInput"
+          />
+        </view>
+        <view wx:if="{{errors.name}}" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#fa5151" />
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{errors.name}}" class="weui-cells__tips error-message">
+      {{errors.name}}
+    </view>
+
+    <view class="weui-cells__title">密码</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input {{errors.password ? 'weui-cell_warn' : ''}}">
+        <view class="weui-cell__bd">
+          <input
+            class="weui-input"
+            type="password"
+            placeholder="请输入密码"
+            value="{{form.password}}"
+            bindinput="handlePasswordInput"
+          />
+        </view>
+        <view wx:if="{{errors.password}}" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#fa5151" />
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{errors.password}}" class="weui-cells__tips error-message">
+      {{errors.password}}
     </view>
 
     <view class="weui-btn-area">
@@ -75,10 +139,10 @@
         取消
       </view>
       <view
-        class="weui-dialog__btn"
+        class="weui-dialog__btn {{sendingVerificationCode ? 'weui-dialog__btn_disabled' : ''}}"
         bindtap="sendVerificationCode"
       >
-        确定
+        {{sendingVerificationCode ? '发送中' : '确定'}}
       </view>
     </view>
   </view>

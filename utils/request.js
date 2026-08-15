@@ -4,7 +4,25 @@ const BASE_URL = 'http://larabbs.test/api/v1'
 
 const getErrorMessage = (response) => {
   const data = response && response.data
-  return data && data.message ? data.message : '请求失败，请稍后重试'
+  const message = data && data.message
+
+  if (typeof message === 'string' && message) {
+    return message
+  }
+
+  const errors = data && data.errors
+  if (errors && typeof errors === 'object') {
+    const firstError = Object.keys(errors)
+      .map((field) => errors[field])
+      .flat()
+      .find((item) => typeof item === 'string' && item)
+
+    if (firstError) {
+      return firstError
+    }
+  }
+
+  return '请求失败，请稍后重试'
 }
 
 const showStatusMessage = (response) => {

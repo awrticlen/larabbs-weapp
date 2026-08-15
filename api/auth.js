@@ -11,9 +11,29 @@ const login = (data) => request('weapp/authorizations', {
 const getCaptcha = (phone) => request('captchas', {
   method: 'POST',
   header: {
-    Accept: 'application/json'
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
   },
   data: { phone }
+})
+
+const getVerificationCode = (key, code) => request('verificationCodes', {
+  method: 'POST',
+  header: {
+    Accept: 'application/json'
+  },
+  data: {
+    captcha_key: key,
+    captcha_code: code
+  }
+})
+
+const register = (data) => request('weapp/users', {
+  method: 'POST',
+  header: {
+    Accept: 'application/json'
+  },
+  data
 })
 
 const refresh = (token) => request('authorizations/current', {
@@ -34,7 +54,9 @@ const logout = (token) => request('authorizations/current', {
 
 module.exports = {
   getCaptcha,
+  getVerificationCode,
   login,
   logout,
-  refresh
+  refresh,
+  register
 }

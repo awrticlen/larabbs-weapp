@@ -56,8 +56,8 @@
     <view class="weui-btn-area">
       <button
         class="weui-btn weui-btn_primary"
-        loading="{{submitting}}"
-        disabled="{{submitting}}"
+        loading="{{submitting || restoring}}"
+        disabled="{{submitting || restoring}}"
         bindtap="submit"
       >
         登录

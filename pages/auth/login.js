@@ -4,7 +4,7 @@ const getErrorMessage = (error) => {
   const response = error && error.response
   const data = response && response.data
 
-  if (data && data.message) {
+  if (data && typeof data.message === 'string' && data.message) {
     return data.message
   }
 
@@ -13,6 +13,16 @@ const getErrorMessage = (error) => {
   }
 
   return '登录失败，请稍后重试'
+}
+
+const needsManualBinding = (error) => {
+  const response = error && error.response
+  const data = response && response.data
+
+  return response
+    && response.statusCode === 401
+    && data
+    && data.message === '用户名和密码不能为空'
 }
 
 Page({
@@ -44,7 +54,7 @@ Page({
   },
 
   async submit() {
-    if (this.data.submitting) {
+    if (this.data.submitting || this.data.restoring) {
       return
     }
 
@@ -84,17 +94,24 @@ Page({
       return
     }
 
-    if (!authState.accessToken || this.data.restoring) {
+    if (this.data.restoring) {
       return
     }
 
-    this.setData({ restoring: true })
+    this.setData({
+      restoring: true,
+      errorMessage: ''
+    })
 
     try {
-      await app.ensureAuth()
+      await app.login()
       wx.navigateBack()
     } catch (error) {
-      // 当前凭证无法恢复时，保留表单供用户重新绑定或登录。
+      if (!needsManualBinding(error)) {
+        this.setData({
+          errorMessage: getErrorMessage(error)
+        })
+      }
     } finally {
       this.setData({ restoring: false })
     }
