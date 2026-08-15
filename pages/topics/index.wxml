@@ -16,7 +16,7 @@
               <view class="weui-media-box__info topic-info">
                 <view class="weui-media-box__info__meta">{{item.categoryName}}</view>
                 <view class="weui-media-box__info__meta">{{item.userName}}</view>
-                <view class="weui-media-box__info__meta">{{item.updatedAt}}</view>
+                <view class="weui-media-box__info__meta">{{item.updatedAtText}}</view>
               </view>
             </view>
             <view class="weui-badge reply-count">{{item.replyCount}}</view>

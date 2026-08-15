@@ -1,3 +1,4 @@
+const { diffForHumans } = require('../../utils/time')
 const { getTopics } = require('../../api/topic')
 
 const DEFAULT_AVATAR = '/assets/images/user.png'
@@ -28,6 +29,7 @@ const normalizeTopic = (topic = {}) => {
     categoryName: category.name || '未分类',
     userName: user.name || '匿名用户',
     updatedAt: topic.updated_at || '',
+    updatedAtText: diffForHumans(topic.updated_at),
     replyCount: Number(topic.reply_count) || 0,
     avatar: avatar && !/\.svg(?:$|\?)/i.test(avatar) ? avatar : DEFAULT_AVATAR
   }
