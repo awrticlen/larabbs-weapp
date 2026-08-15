@@ -1,0 +1,43 @@
+<view class="page topics-page">
+  <view class="page__bd">
+    <view wx:if="{{errorMessage}}" class="weui-toptips weui-toptips_warn">
+      {{errorMessage}}
+    </view>
+
+    <view class="weui-panel weui-panel_access">
+      <view class="weui-panel__bd">
+        <block wx:for="{{topics}}" wx:key="id">
+          <view class="weui-media-box weui-media-box_appmsg topic-item" hover-class="weui-cell_active">
+            <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+              <image class="avatar" mode="aspectFill" src="{{item.avatar}}" />
+            </view>
+            <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+              <view class="weui-media-box__title topic-title">{{item.title}}</view>
+              <view class="weui-media-box__info topic-info">
+                <view class="weui-media-box__info__meta">{{item.categoryName}}</view>
+                <view class="weui-media-box__info__meta">{{item.userName}}</view>
+                <view class="weui-media-box__info__meta">{{item.updatedAt}}</view>
+              </view>
+            </view>
+            <view class="weui-badge reply-count">{{item.replyCount}}</view>
+          </view>
+        </block>
+
+        <view wx:if="{{isLoading && !topics.length}}" class="weui-loadmore">
+          <view class="weui-loading"></view>
+          <view class="weui-loadmore__tips">加载中</view>
+        </view>
+        <view wx:if="{{isLoading && topics.length}}" class="weui-loadmore">
+          <view class="weui-loading"></view>
+          <view class="weui-loadmore__tips">加载中</view>
+        </view>
+        <view wx:if="{{noMoreData && topics.length}}" class="weui-loadmore weui-loadmore_line">
+          <view class="weui-loadmore__tips weui-loadmore__tips_in-line">没有更多数据</view>
+        </view>
+        <view wx:if="{{!isLoading && !topics.length && !errorMessage}}" class="weui-loadmore">
+          <view class="weui-loadmore__tips">暂无话题</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
