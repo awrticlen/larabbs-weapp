@@ -1,4 +1,4 @@
-/* pages/user/user.wxss */
+/* pages/users/me.wxss */
 .user-page {
   padding: 0 0 32rpx;
 }

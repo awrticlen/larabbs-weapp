@@ -302,7 +302,7 @@ Page({
 
       setTimeout(() => {
         wx.switchTab({
-          url: '/pages/user/user'
+          url: '/pages/users/me'
         })
       }, 1500)
     } catch (error) {

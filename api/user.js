@@ -1,4 +1,4 @@
-const { authRequest } = require('../utils/request')
+const { authRequest, uploadFile } = require('../utils/request')
 
 const getCurrentUser = () => authRequest('user', {
   method: 'GET',
@@ -7,6 +7,27 @@ const getCurrentUser = () => authRequest('user', {
   }
 })
 
+const updateCurrentUser = (data) => authRequest('user', {
+  method: 'PUT',
+  header: {
+    Accept: 'application/json'
+  },
+  data
+})
+
+const uploadAvatar = (filePath) => uploadFile('images', {
+  filePath,
+  name: 'image',
+  formData: {
+    type: 'avatar'
+  },
+  header: {
+    Accept: 'application/json'
+  }
+})
+
 module.exports = {
-  getCurrentUser
+  getCurrentUser,
+  updateCurrentUser,
+  uploadAvatar
 }

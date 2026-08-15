@@ -93,22 +93,7 @@ const normalizePhoneForm = (form = {}) => ({
 
 const registrationNamePattern = /^[A-Za-z0-9_-]+$/
 
-const registrationRules = [
-  {
-    field: 'phone',
-    message: '请输入手机号',
-    isValid: (value) => typeof value === 'string' && value.trim().length > 0
-  },
-  {
-    field: 'phone',
-    message: '手机号格式不正确',
-    isValid: (value) => mobilePattern.test((value || '').trim())
-  },
-  {
-    field: 'verification_code',
-    message: '请输入验证码',
-    isValid: (value) => typeof value === 'string' && value.trim().length > 0
-  },
+const userNameRules = [
   {
     field: 'name',
     message: '请输入姓名',
@@ -126,7 +111,26 @@ const registrationRules = [
     field: 'name',
     message: '姓名只支持英文、数字、横杆和下划线',
     isValid: (value) => registrationNamePattern.test((value || '').trim())
+  }
+]
+
+const registrationRules = [
+  {
+    field: 'phone',
+    message: '请输入手机号',
+    isValid: (value) => typeof value === 'string' && value.trim().length > 0
   },
+  {
+    field: 'phone',
+    message: '手机号格式不正确',
+    isValid: (value) => mobilePattern.test((value || '').trim())
+  },
+  {
+    field: 'verification_code',
+    message: '请输入验证码',
+    isValid: (value) => typeof value === 'string' && value.trim().length > 0
+  },
+  ...userNameRules,
   {
     field: 'password',
     message: '请填写密码',
@@ -136,6 +140,23 @@ const registrationRules = [
     field: 'password',
     message: '密码最少 6 位数',
     isValid: (value) => typeof value === 'string' && value.length >= 6
+  }
+]
+
+const profileRules = [
+  ...userNameRules,
+  {
+    field: 'email',
+    message: '邮箱格式不正确',
+    isValid: (value) => {
+      const email = (value || '').trim()
+      return !email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    }
+  },
+  {
+    field: 'introduction',
+    message: '个人简介不能超过 80 个字符',
+    isValid: (value) => typeof value === 'string' && value.length <= 80
   }
 ]
 
@@ -159,6 +180,37 @@ const validateRegistrationForm = (form = {}) => {
   }
 }
 
+const validateProfileForm = (form = {}) => {
+  const errors = {}
+
+  profileRules.some((rule) => {
+    if (errors[rule.field] || rule.isValid(form[rule.field])) {
+      return false
+    }
+
+    errors[rule.field] = rule.message
+    return false
+  })
+
+  const firstError = Object.keys(errors)
+    .map((field) => errors[field])
+    .find(Boolean) || ''
+
+  return {
+    errors,
+    firstError,
+    valid: Object.keys(errors).length === 0
+  }
+}
+
+const normalizeProfileForm = (form = {}) => ({
+  name: typeof form.name === 'string' ? form.name.trim() : '',
+  email: typeof form.email === 'string' ? form.email.trim() : '',
+  introduction: typeof form.introduction === 'string' ? form.introduction.trim() : '',
+  avatar: typeof form.avatar === 'string' ? form.avatar : '',
+  avatar_image_id: Number.isInteger(form.avatar_image_id) ? form.avatar_image_id : ''
+})
+
 const normalizeRegistrationForm = (form = {}) => ({
   phone: typeof form.phone === 'string' ? form.phone.trim() : '',
   verification_code: typeof form.verification_code === 'string' ? form.verification_code.trim() : '',
@@ -169,8 +221,10 @@ const normalizeRegistrationForm = (form = {}) => ({
 module.exports = {
   normalizeLoginForm,
   normalizePhoneForm,
+  normalizeProfileForm,
   normalizeRegistrationForm,
   validateLoginForm,
   validatePhoneForm,
+  validateProfileForm,
   validateRegistrationForm
 }

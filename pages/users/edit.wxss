@@ -1,0 +1,37 @@
+.profile-edit-page .weui-toptips {
+  display: block;
+}
+
+.avatar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40rpx 0 28rpx;
+}
+
+.avatar {
+  display: block;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: #f1f1f1;
+}
+
+.avatar_uploading {
+  opacity: 0.5;
+}
+
+.avatar-hint {
+  margin-top: 12rpx;
+  color: #888888;
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+
+.introduction {
+  min-height: 3.3em;
+}
+
+.error-message {
+  color: #fa5151;
+}

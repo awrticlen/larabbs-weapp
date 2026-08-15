@@ -1,5 +1,5 @@
 const { login: loginRequest, logout: logoutRequest, refresh: refreshRequest, register: registerRequest } = require('./api/auth')
-const { getCurrentUser } = require('./api/user')
+const { getCurrentUser, updateCurrentUser: updateCurrentUserRequest } = require('./api/user')
 const auth = require('./utils/auth')
 const { login: getLoginCode } = require('./utils/wechat')
 
@@ -44,6 +44,14 @@ App({
     }
 
     const response = await getCurrentUser()
+    auth.setUser(response.data)
+    this.syncAuthState()
+
+    return response.data
+  },
+
+  async updateCurrentUser(data = {}) {
+    const response = await updateCurrentUserRequest(data)
     auth.setUser(response.data)
     this.syncAuthState()
 

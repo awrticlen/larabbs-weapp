@@ -2,6 +2,18 @@ const { getToken, getTokenExpiredAt } = require('./auth')
 
 const BASE_URL = 'http://larabbs.test/api/v1'
 
+const parseResponseData = (data) => {
+  if (typeof data !== 'string') {
+    return data
+  }
+
+  try {
+    return JSON.parse(data)
+  } catch (error) {
+    return data
+  }
+}
+
 const getErrorMessage = (response) => {
   const data = response && response.data
   const message = data && data.message
@@ -123,7 +135,47 @@ const authRequest = async (path, options = {}, showLoading = true) => {
   }, showLoading)
 }
 
+const uploadFile = async (path, options = {}, showLoading = true) => {
+  if (showLoading) {
+    wx.showLoading({ title: '上传中' })
+  }
+
+  try {
+    const token = await ensureAuthToken()
+    const response = await new Promise((resolve, reject) => {
+      wx.uploadFile({
+        ...options,
+        url: `${BASE_URL}/${path.replace(/^\/+/, '')}`,
+        header: {
+          ...(options.header || {}),
+          Authorization: `Bearer ${token}`
+        },
+        success: resolve,
+        fail: reject
+      })
+    })
+    const normalizedResponse = {
+      ...response,
+      data: parseResponseData(response.data)
+    }
+
+    if (normalizedResponse.statusCode >= 200 && normalizedResponse.statusCode < 300) {
+      return normalizedResponse
+    }
+
+    showStatusMessage(normalizedResponse)
+    const error = new Error(getErrorMessage(normalizedResponse))
+    error.response = normalizedResponse
+    throw error
+  } finally {
+    if (showLoading) {
+      wx.hideLoading()
+    }
+  }
+}
+
 module.exports = {
   authRequest,
-  request
+  request,
+  uploadFile
 }
