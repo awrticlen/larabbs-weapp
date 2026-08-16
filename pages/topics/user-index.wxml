@@ -14,7 +14,7 @@
       <view class="weui-loadmore__tips">暂无话题</view>
     </view>
     <view wx:if="{{!isLoading && errorMessage && userId}}" class="topic-retry">
-      <button class="weui-btn weui-btn_default" bindtap="retryLoad">重新加载</button>
+      <button class="weui-btn weui-btn_default" bindtap="reloadList">重新加载</button>
     </view>
   </view>
 </view>

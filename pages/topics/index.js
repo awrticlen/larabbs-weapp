@@ -1,5 +1,20 @@
 const { getCategories, getTopics } = require('../../api/topic')
 const { normalizeTopic } = require('../../utils/topic')
+const { createListRefreshMixin } = require('../../mixins/list-refresh')
+
+const listRefresh = createListRefreshMixin({
+  fetchPage: ({ page, pageInstance }) => {
+    const categoryId = pageInstance.data.currentCategoryId
+
+    return getTopics({
+      page,
+      include: 'user,category',
+      ...(categoryId ? { 'filter[category_id]': categoryId } : {})
+    })
+  },
+  normalizeItem: normalizeTopic,
+  fallbackErrorMessage: '获取话题失败，请稍后重试'
+})
 
 const CATEGORY_STORAGE_KEY = 'categories'
 
@@ -30,46 +45,22 @@ const normalizeCategories = (categories) => (Array.isArray(categories) ? categor
   }))
   .filter((category) => category.id && category.name)
 
-const getTopicParams = (page, categoryId) => ({
-  page,
-  include: 'user,category',
-  ...(categoryId ? { 'filter[category_id]': categoryId } : {})
-})
-
 Page({
+  ...listRefresh,
+
   data: {
+    ...listRefresh.data,
     categories: [],
     currentCategoryId: null,
     currentCategoryName: '话题',
     categoryOpen: false,
     categoryLoading: false,
-    categoryErrorMessage: '',
-    topics: [],
-    page: 1,
-    noMoreData: false,
-    isLoading: false,
-    errorMessage: ''
+    categoryErrorMessage: ''
   },
 
   onLoad() {
     this.loadCategories()
-    this.loadTopics({ reset: true })
-  },
-
-  async onPullDownRefresh() {
-    try {
-      await this.loadTopics({ reset: true, page: 1 })
-    } finally {
-      wx.stopPullDownRefresh()
-    }
-  },
-
-  onReachBottom() {
-    if (this.data.noMoreData || this.data.isLoading) {
-      return
-    }
-
-    this.loadTopics({ page: this.data.page + 1 })
+    this.reloadList()
   },
 
   toggleCategories() {
@@ -91,18 +82,10 @@ Page({
     this.setData({
       currentCategoryId: categoryId,
       currentCategoryName: categoryName || '话题',
-      categoryOpen: false,
-      topics: [],
-      page: 1,
-      noMoreData: false,
-      errorMessage: ''
+      categoryOpen: false
     })
 
-    await this.loadTopics({
-      reset: true,
-      page: 1,
-      categoryId
-    })
+    await this.reloadList({ clear: true })
   },
 
   async loadCategories() {
@@ -134,60 +117,6 @@ Page({
       return []
     } finally {
       this.setData({ categoryLoading: false })
-    }
-  },
-
-  async loadTopics({
-    reset = false,
-    page = this.data.page,
-    categoryId = this.data.currentCategoryId
-  } = {}) {
-    const requestId = (this.topicRequestId || 0) + 1
-    this.topicRequestId = requestId
-
-    this.setData({
-      isLoading: true,
-      errorMessage: ''
-    })
-
-    try {
-      const response = await getTopics(getTopicParams(page, categoryId))
-
-      if (requestId !== this.topicRequestId) {
-        return false
-      }
-
-      const payload = response.data || {}
-      const topics = Array.isArray(payload.data)
-        ? payload.data.map(normalizeTopic)
-        : []
-      const pagination = payload.meta || {}
-      const currentPage = Number(pagination.current_page) || page
-      const lastPage = Number(pagination.last_page)
-      const noMoreData = Number.isFinite(lastPage)
-        ? currentPage >= lastPage
-        : topics.length === 0
-
-      this.setData({
-        topics: reset ? topics : this.data.topics.concat(topics),
-        page: currentPage,
-        noMoreData,
-        errorMessage: ''
-      })
-
-      return true
-    } catch (error) {
-      if (requestId === this.topicRequestId) {
-        this.setData({
-          errorMessage: getErrorMessage(error, '获取话题失败，请稍后重试')
-        })
-      }
-
-      return false
-    } finally {
-      if (requestId === this.topicRequestId) {
-        this.setData({ isLoading: false })
-      }
     }
   }
 })
