@@ -1,0 +1,11 @@
+.user-topics-page {
+  padding-bottom: 32rpx;
+}
+
+.user-topics-page .weui-toptips {
+  display: block;
+}
+
+.topic-retry {
+  padding: 0 48rpx;
+}

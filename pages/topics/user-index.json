@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "话题",
+  "navigationBarTitleText": "Ta 发布的话题",
   "enablePullDownRefresh": true,
   "onReachBottomDistance": 100,
   "usingComponents": {

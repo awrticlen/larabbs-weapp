@@ -1,0 +1,20 @@
+<view class="page user-topics-page">
+  <view class="page__bd">
+    <view wx:if="{{errorMessage}}" class="weui-toptips weui-toptips_warn">
+      {{errorMessage}}
+    </view>
+
+    <topic-list topics="{{topics}}" no-more-data="{{noMoreData}}"></topic-list>
+
+    <view wx:if="{{isLoading}}" class="weui-loadmore">
+      <view class="weui-loading"></view>
+      <view class="weui-loadmore__tips">加载中</view>
+    </view>
+    <view wx:if="{{!isLoading && !topics.length && !errorMessage}}" class="weui-loadmore">
+      <view class="weui-loadmore__tips">暂无话题</view>
+    </view>
+    <view wx:if="{{!isLoading && errorMessage && userId}}" class="topic-retry">
+      <button class="weui-btn weui-btn_default" bindtap="retryLoad">重新加载</button>
+    </view>
+  </view>
+</view>
