@@ -1,6 +1,7 @@
 const { getCategories, getTopics } = require('../../api/topic')
 const { normalizeTopic } = require('../../utils/topic')
 const { createListRefreshMixin } = require('../../mixins/list-refresh')
+const eventHub = require('../../utils/event-hub')
 
 const listRefresh = createListRefreshMixin({
   fetchPage: ({ page, pageInstance }) => {
@@ -59,8 +60,14 @@ Page({
   },
 
   onLoad() {
+    this.topicDeletedHandler = () => this.reloadList({ clear: true })
+    eventHub.on('topic-deleted', this.topicDeletedHandler)
     this.loadCategories()
     this.reloadList()
+  },
+
+  onUnload() {
+    eventHub.off('topic-deleted', this.topicDeletedHandler)
   },
 
   toggleCategories() {

@@ -43,6 +43,13 @@
     <view class="weui-article topic-body">
       <rich-text wx:if="{{topic.body}}" nodes="{{topic.body}}"></rich-text>
       <view wx:else class="empty-content">暂无内容</view>
+      <button
+        wx:if="{{canDelete}}"
+        class="weui-btn weui-btn_mini delete-button"
+        loading="{{deleting}}"
+        disabled="{{deleting}}"
+        bindtap="deleteTopic"
+      >删除</button>
     </view>
   </view>
 

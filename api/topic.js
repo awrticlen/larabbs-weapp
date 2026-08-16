@@ -1,4 +1,4 @@
-const { request } = require('../utils/request')
+const { authRequest, request } = require('../utils/request')
 
 const getTopics = (data = {}) => request('topics', {
   method: 'GET',
@@ -31,9 +31,17 @@ const getCategories = () => request('categories', {
   }
 }, false)
 
+const deleteTopic = (id) => authRequest(`topics/${id}`, {
+  method: 'DELETE',
+  header: {
+    Accept: 'application/json'
+  }
+})
+
 module.exports = {
   getCategories,
   getTopic,
   getTopics,
-  getUserTopics
+  getUserTopics,
+  deleteTopic
 }

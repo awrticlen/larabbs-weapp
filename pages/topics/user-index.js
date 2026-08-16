@@ -1,5 +1,6 @@
 const { getUserTopics } = require('../../api/topic')
 const { createListRefreshMixin } = require('../../mixins/list-refresh')
+const eventHub = require('../../utils/event-hub')
 const { normalizeTopic } = require('../../utils/topic')
 
 const normalizeUserId = (value) => {
@@ -26,6 +27,9 @@ Page({
   },
 
   onLoad(options = {}) {
+    this.topicDeletedHandler = () => this.reloadList({ clear: true })
+    eventHub.on('topic-deleted', this.topicDeletedHandler)
+
     const userId = normalizeUserId(options.id)
 
     if (!userId) {
@@ -35,5 +39,9 @@ Page({
 
     this.setData({ userId })
     this.reloadList({ clear: true })
+  },
+
+  onUnload() {
+    eventHub.off('topic-deleted', this.topicDeletedHandler)
   }
 })

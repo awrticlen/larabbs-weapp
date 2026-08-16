@@ -79,7 +79,14 @@
   line-height: 1.6;
 }
 
-.retry-button {
-  width: 240rpx;
-  margin-top: 32rpx;
+.delete-button {
+  margin-top: 30rpx;
+  border: 1rpx solid #c7c7c7;
+  background-color: #eeeeee;
+  color: #333333;
+  font-weight: 500;
+}
+
+.delete-button::after {
+  border-color: #c7c7c7;
 }
