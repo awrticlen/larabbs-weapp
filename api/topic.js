@@ -8,6 +8,14 @@ const getTopics = (data = {}) => request('topics', {
   data
 }, false)
 
+const getTopic = (id, data = {}) => request(`topics/${id}`, {
+  method: 'GET',
+  header: {
+    Accept: 'application/json'
+  },
+  data
+}, false)
+
 const getCategories = () => request('categories', {
   method: 'GET',
   header: {
@@ -17,5 +25,6 @@ const getCategories = () => request('categories', {
 
 module.exports = {
   getCategories,
+  getTopic,
   getTopics
 }

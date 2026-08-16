@@ -1,0 +1,85 @@
+.topic-detail-page {
+  padding: 0;
+  background: #ffffff;
+}
+
+.topic-author {
+  margin-top: 0;
+}
+
+.avatar-wrap {
+  margin-right: 20rpx;
+}
+
+.avatar {
+  display: block;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: #f1f1f1;
+}
+
+.user-name {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.user-introduction {
+  margin-top: 8rpx;
+  color: #888888;
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+
+.topic-header {
+  padding: 30rpx;
+}
+
+.topic-title {
+  color: #333333;
+  font-size: 38rpx;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.topic-info {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 16rpx;
+}
+
+.topic-info .weui-media-box__info__meta {
+  margin-right: 12rpx;
+  color: #888888;
+  font-size: 24rpx;
+}
+
+.topic-info .weui-media-box__info__meta:not(:last-child)::after {
+  margin-left: 12rpx;
+  content: '•';
+}
+
+.topic-body {
+  padding: 0 30rpx 60rpx;
+}
+
+.empty-content {
+  color: #888888;
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+.topic-state {
+  padding: 120rpx 48rpx;
+  color: #888888;
+  text-align: center;
+}
+
+.topic-state__message {
+  line-height: 1.6;
+}
+
+.retry-button {
+  width: 240rpx;
+  margin-top: 32rpx;
+}

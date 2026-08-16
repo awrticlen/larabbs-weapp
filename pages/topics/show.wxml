@@ -1,0 +1,47 @@
+<view class="page topic-detail-page">
+  <view wx:if="{{topic}}" class="page__bd">
+    <view class="weui-cells weui-cells_after-title topic-author">
+      <view class="weui-cell">
+        <view class="weui-cell__hd avatar-wrap">
+          <image class="avatar" mode="aspectFill" src="{{topic.avatar}}" />
+        </view>
+        <view class="weui-cell__bd">
+          <view class="user-name">{{topic.userName}}</view>
+          <view wx:if="{{topic.userIntroduction}}" class="user-introduction">
+            {{topic.userIntroduction}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="topic-header">
+      <view class="topic-title">{{topic.title}}</view>
+      <view class="weui-media-box__info topic-info">
+        <view class="weui-media-box__info__meta">{{topic.categoryName}}</view>
+        <view class="weui-media-box__info__meta">{{topic.updatedAtText}}</view>
+        <view class="weui-media-box__info__meta">{{topic.replyCount}} 次回复</view>
+      </view>
+    </view>
+
+    <view class="weui-article topic-body">
+      <rich-text wx:if="{{topic.body}}" nodes="{{topic.body}}"></rich-text>
+      <view wx:else class="empty-content">暂无内容</view>
+    </view>
+  </view>
+
+  <view wx:elif="{{isLoading}}" class="weui-loadmore">
+    <view class="weui-loading"></view>
+    <view class="weui-loadmore__tips">加载中</view>
+  </view>
+
+  <view wx:else class="topic-state">
+    <view class="topic-state__message">{{errorMessage}}</view>
+    <button
+      wx:if="{{topicId}}"
+      class="weui-btn weui-btn_default retry-button"
+      bindtap="retryLoad"
+    >
+      重新加载
+    </button>
+  </view>
+</view>
