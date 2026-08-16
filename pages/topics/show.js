@@ -38,6 +38,7 @@ const normalizeTopic = (topic = {}) => {
     title: typeof topic.title === 'string' && topic.title ? topic.title : '未命名话题',
     body: typeof topic.body === 'string' ? topic.body : '',
     categoryName: typeof category.name === 'string' && category.name ? category.name : '未分类',
+    userId: normalizeTopicId(user.id),
     userName: typeof user.name === 'string' && user.name ? user.name : '匿名用户',
     userIntroduction: typeof user.introduction === 'string' ? user.introduction : '',
     updatedAtText: diffForHumans(topic.updated_at),

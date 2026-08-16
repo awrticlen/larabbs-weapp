@@ -1,0 +1,50 @@
+<view class="page user-detail-page">
+  <view wx:if="{{user}}" class="page__bd">
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell user-summary">
+        <view class="weui-cell__bd">
+          <image class="avatar" mode="aspectFill" src="{{user.avatar}}" />
+          <view class="user-name">{{user.name}}</view>
+          <view wx:if="{{user.introduction}}" class="introduction">
+            {{user.introduction}}
+          </view>
+          <view wx:if="{{user.email}}" class="user-email">邮箱：{{user.email}}</view>
+          <view class="weui-media-box__info user-meta">
+            <view class="weui-media-box__info__meta">注册于：{{user.createdAtText}}</view>
+            <view class="weui-media-box__info__meta weui-media-box__info__meta_extra">
+              最后活跃于：{{user.lastActivedAtText}}
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <navigator
+        class="weui-cell weui-cell_access"
+        url="/pages/topics/user-index?id={{user.id}}"
+      >
+        <view class="weui-cell__bd">Ta 的话题</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      </navigator>
+      <view class="weui-cell weui-cell_access">
+        <view class="weui-cell__bd">Ta 的回复</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:elif="{{isLoading}}" class="weui-loadmore">
+    <view class="weui-loading"></view>
+    <view class="weui-loadmore__tips">加载中</view>
+  </view>
+
+  <view wx:else class="user-state">
+    <view class="user-state__message">{{errorMessage}}</view>
+    <button
+      wx:if="{{userId}}"
+      class="weui-btn weui-btn_default retry-button"
+      bindtap="retryLoad"
+    >
+      重新加载
+    </button>
+  </view>
+</view>
