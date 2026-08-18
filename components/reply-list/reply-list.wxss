@@ -1,0 +1,42 @@
+.reply-item {
+  align-items: flex-start;
+}
+
+.replyer-avatar {
+  box-sizing: border-box;
+  display: block;
+  width: 100rpx;
+  height: 100rpx;
+  padding: 8rpx;
+  border: 1rpx solid #dddddd;
+  border-radius: 8rpx;
+}
+
+.replyer-name {
+  font-size: 28rpx;
+}
+
+.topic-link {
+  display: block;
+  margin-top: 6rpx;
+  overflow: hidden;
+  color: #576b95;
+  font-size: 26rpx;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reply-content {
+  margin-top: 8rpx;
+  color: #333333;
+  font-size: 26rpx;
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+.reply-time {
+  margin-top: 10rpx;
+  color: #888888;
+  font-size: 24rpx;
+}

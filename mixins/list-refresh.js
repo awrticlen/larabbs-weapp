@@ -17,6 +17,7 @@ const createListRefreshMixin = ({
   fetchPage,
   normalizeItem = (item) => item,
   canLoad = () => true,
+  resourceKey = 'topics',
   fallbackErrorMessage = '获取数据失败，请稍后重试'
 }) => {
   if (typeof fetchPage !== 'function') {
@@ -58,7 +59,7 @@ const createListRefreshMixin = ({
         : items.length === 0
 
       this.setData({
-        topics: reset ? items : this.data.topics.concat(items),
+        [resourceKey]: reset ? items : this.data[resourceKey].concat(items),
         page: currentPage,
         noMoreData,
         errorMessage: ''
@@ -82,7 +83,7 @@ const createListRefreshMixin = ({
 
   return {
     data: {
-      topics: [],
+      [resourceKey]: [],
       page: 1,
       noMoreData: false,
       isLoading: false,
@@ -107,7 +108,7 @@ const createListRefreshMixin = ({
 
     resetList() {
       this.setData({
-        topics: [],
+        [resourceKey]: [],
         page: 1,
         noMoreData: false,
         errorMessage: ''

@@ -7,7 +7,9 @@
     "pages/users/edit",
     "pages/users/show",
     "pages/auth/login",
-    "pages/auth/register"
+    "pages/auth/register",
+    "pages/replies/index",
+    "pages/replies/user-index"
   ],
   "window": {
     "backgroundColor": "#f7f8fa",

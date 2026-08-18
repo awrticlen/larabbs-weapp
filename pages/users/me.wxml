@@ -53,9 +53,16 @@
       <view wx:else class="weui-cell">
         <view class="weui-cell__bd">我的话题</view>
       </view>
-      <view class="weui-cell weui-cell_access">
+      <navigator
+        wx:if="{{loggedIn && user}}"
+        class="weui-cell weui-cell_access"
+        url="/pages/replies/user-index?id={{user.id}}"
+      >
         <view class="weui-cell__bd">我的回复</view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      </navigator>
+      <view wx:else class="weui-cell">
+        <view class="weui-cell__bd">我的回复</view>
       </view>
     </view>
 

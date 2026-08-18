@@ -1,0 +1,12 @@
+.replies-page {
+  min-height: 100vh;
+  padding: 0 0 32rpx;
+}
+
+.reply-list-panel {
+  margin-top: 0;
+}
+
+.reply-retry {
+  padding: 32rpx;
+}

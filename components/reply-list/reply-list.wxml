@@ -1,0 +1,31 @@
+<block wx:for="{{replies}}" wx:key="id">
+  <view class="weui-media-box weui-media-box_appmsg reply-item" hover-class="weui-cell_active">
+    <navigator
+      wx:if="{{item.userId}}"
+      class="weui-media-box__hd weui-media-box__hd_in-appmsg"
+      url="/pages/users/show?id={{item.userId}}"
+    >
+      <image class="replyer-avatar weui-media-box__thumb" mode="aspectFill" src="{{item.avatar}}" />
+    </navigator>
+    <view wx:else class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+      <image class="replyer-avatar weui-media-box__thumb" mode="aspectFill" src="{{item.avatar}}" />
+    </view>
+    <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+      <view class="weui-media-box__title replyer-name">{{item.userName}}</view>
+      <navigator
+        wx:if="{{showTopic && item.topicId}}"
+        class="topic-link"
+        url="/pages/topics/show?id={{item.topicId}}"
+      >
+        {{item.topicTitle}}
+      </navigator>
+      <rich-text wx:if="{{item.content}}" class="weui-media-box__desc reply-content" nodes="{{item.content}}"></rich-text>
+      <view wx:else class="weui-media-box__desc reply-content">暂无内容</view>
+      <view class="weui-media-box__desc reply-time">{{item.createdAtText}}</view>
+    </view>
+  </view>
+</block>
+
+<view wx:if="{{showNoMore && noMoreData && replies.length}}" class="weui-loadmore weui-loadmore_line">
+  <view class="weui-loadmore__tips weui-loadmore__tips_in-line">没有更多数据</view>
+</view>

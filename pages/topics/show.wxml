@@ -51,6 +51,20 @@
         bindtap="deleteTopic"
       >删除</button>
     </view>
+
+    <view wx:if="{{topic.replyCount}}" class="weui-panel weui-panel_access reply-panel">
+      <view class="weui-panel__hd">回复（{{topic.replyCount}}）</view>
+      <view class="weui-panel__bd">
+        <reply-list replies="{{topic.topReplies}}"></reply-list>
+      </view>
+      <navigator
+        class="weui-cell weui-cell_access weui-cell_link"
+        url="/pages/replies/index?topic_id={{topic.id}}"
+      >
+        <view class="weui-cell__bd">查看全部回复</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      </navigator>
+    </view>
   </view>
 
   <view wx:elif="{{isLoading}}" class="weui-loadmore">

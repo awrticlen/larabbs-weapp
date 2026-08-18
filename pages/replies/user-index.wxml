@@ -1,0 +1,29 @@
+<view class="page replies-page">
+  <view class="page__bd">
+    <view wx:if="{{errorMessage}}" class="weui-toptips weui-toptips_warn">
+      {{errorMessage}}
+    </view>
+
+    <view wx:if="{{replies.length}}" class="weui-panel weui-panel_access reply-list-panel">
+      <view class="weui-panel__bd">
+        <reply-list
+          replies="{{replies}}"
+          no-more-data="{{noMoreData}}"
+          show-no-more="{{true}}"
+          show-topic="{{true}}"
+        ></reply-list>
+      </view>
+    </view>
+
+    <view wx:if="{{isLoading}}" class="weui-loadmore">
+      <view class="weui-loading"></view>
+      <view class="weui-loadmore__tips">加载中</view>
+    </view>
+    <view wx:if="{{!isLoading && !replies.length && !errorMessage}}" class="weui-loadmore">
+      <view class="weui-loadmore__tips">暂无回复</view>
+    </view>
+    <view wx:if="{{!isLoading && errorMessage && userId}}" class="reply-retry">
+      <button class="weui-btn weui-btn_default" bindtap="reloadList">重新加载</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "用户回复列表",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 100,
+  "usingComponents": {
+    "reply-list": "/components/reply-list/reply-list"
+  }
+}

@@ -1,6 +1,7 @@
 const { deleteTopic: deleteTopicRequest, getTopic } = require('../../api/topic')
 const eventHub = require('../../utils/event-hub')
 const { diffForHumans } = require('../../utils/time')
+const { normalizeReply } = require('../../utils/reply')
 
 const DEFAULT_AVATAR = '/assets/images/user.png'
 
@@ -57,6 +58,9 @@ const normalizeTopic = (topic = {}) => {
     userIntroduction: typeof user.introduction === 'string' ? user.introduction : '',
     updatedAtText: diffForHumans(topic.updated_at),
     replyCount: Number(topic.reply_count) || 0,
+    topReplies: Array.isArray(topic.top_replies)
+      ? topic.top_replies.map(normalizeReply)
+      : [],
     avatar: avatar && !/\.svg(?:$|\?)/i.test(avatar) ? avatar : DEFAULT_AVATAR
   }
 }
@@ -106,7 +110,9 @@ Page({
     })
 
     try {
-      const response = await getTopic(topicId, { include: 'user,category' })
+      const response = await getTopic(topicId, {
+        include: 'user,category,topReplies.user'
+      })
 
       if (requestId !== this.topicRequestId) {
         return

@@ -25,10 +25,13 @@
         <view class="weui-cell__bd">Ta 的话题</view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
       </navigator>
-      <view class="weui-cell weui-cell_access">
+      <navigator
+        class="weui-cell weui-cell_access"
+        url="/pages/replies/user-index?id={{user.id}}"
+      >
         <view class="weui-cell__bd">Ta 的回复</view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-      </view>
+      </navigator>
     </view>
   </view>
 

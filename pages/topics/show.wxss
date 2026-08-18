@@ -79,6 +79,10 @@
   line-height: 1.6;
 }
 
+.reply-panel {
+  margin-top: 0;
+}
+
 .delete-button {
   margin-top: 30rpx;
   border: 1rpx solid #c7c7c7;
