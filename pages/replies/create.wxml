@@ -1,0 +1,34 @@
+<view class="page create-reply-page">
+  <view class="page__bd">
+    <view wx:if="{{errorMessage}}" class="weui-toptips weui-toptips_warn">
+      {{errorMessage}}
+    </view>
+
+    <view class="weui-cells__title">回复内容</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell content-cell">
+        <view class="weui-cell__bd">
+          <textarea
+            class="weui-textarea content"
+            maxlength="2000"
+            focus="{{shouldFocus}}"
+            placeholder="请输入回复内容"
+            value="{{content}}"
+            bindinput="handleContentInput"
+          ></textarea>
+          <view class="weui-textarea-counter">{{contentLength}}/2000</view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{contentError}}" class="field-error">{{contentError}}</view>
+
+    <view class="weui-btn-area submit-area">
+      <button
+        class="weui-btn weui-btn_primary"
+        loading="{{submitting}}"
+        disabled="{{submitting || navigating}}"
+        bindtap="submit"
+      >提交回复</button>
+    </view>
+  </view>
+</view>

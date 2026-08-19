@@ -3,6 +3,7 @@
   "enablePullDownRefresh": true,
   "onReachBottomDistance": 100,
   "usingComponents": {
-    "reply-list": "/components/reply-list/reply-list"
+    "reply-list": "/components/reply-list/reply-list",
+    "reply-create-link": "/components/reply-create-link/reply-create-link"
   }
 }

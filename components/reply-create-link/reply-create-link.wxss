@@ -1,0 +1,24 @@
+.create-reply {
+  position: fixed;
+  right: 30rpx;
+  bottom: 48rpx;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.18);
+}
+
+.create-reply_hover {
+  opacity: 0.72;
+}
+
+.create-reply__icon {
+  display: block;
+  width: 64rpx;
+  height: 64rpx;
+}

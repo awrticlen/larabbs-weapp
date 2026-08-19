@@ -1,6 +1,12 @@
 const { getReplies } = require('../../api/reply')
 const { createListRefreshMixin } = require('../../mixins/list-refresh')
 const { normalizeReply } = require('../../utils/reply')
+const eventHub = require('../../utils/event-hub')
+
+const normalizeTopicId = (value) => {
+  const id = Number(value)
+  return Number.isInteger(id) && id > 0 ? id : null
+}
 
 const listRefresh = createListRefreshMixin({
   fetchPage: ({ page, pageInstance }) => getReplies(pageInstance.data.topicId, {
@@ -30,6 +36,18 @@ Page({
     }
 
     this.setData({ topicId })
+    this.replyCreatedHandler = (payload = {}) => {
+      if (normalizeTopicId(payload.topicId) !== topicId) {
+        return
+      }
+
+      this.reloadList({ clear: true })
+    }
+    eventHub.on('reply-created', this.replyCreatedHandler)
     this.reloadList({ clear: true })
+  },
+
+  onUnload() {
+    eventHub.off('reply-created', this.replyCreatedHandler)
   }
 })

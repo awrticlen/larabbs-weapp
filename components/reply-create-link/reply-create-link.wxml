@@ -1,0 +1,8 @@
+<navigator
+  wx:if="{{topicId}}"
+  class="create-reply"
+  hover-class="create-reply_hover"
+  url="/pages/replies/create?topic_id={{topicId}}"
+>
+  <image class="create-reply__icon" mode="aspectFit" src="/assets/images/reply.png" />
+</navigator>

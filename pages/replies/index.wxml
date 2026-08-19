@@ -25,4 +25,6 @@
       <button class="weui-btn weui-btn_default" bindtap="reloadList">重新加载</button>
     </view>
   </view>
+
+  <reply-create-link topic-id="{{topicId}}"></reply-create-link>
 </view>

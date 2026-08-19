@@ -82,4 +82,6 @@
       重新加载
     </button>
   </view>
+
+  <reply-create-link topic-id="{{topicId}}"></reply-create-link>
 </view>

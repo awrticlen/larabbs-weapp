@@ -1,6 +1,7 @@
 {
   "navigationBarTitleText": "话题详情",
   "usingComponents": {
-    "reply-list": "/components/reply-list/reply-list"
+    "reply-list": "/components/reply-list/reply-list",
+    "reply-create-link": "/components/reply-create-link/reply-create-link"
   }
 }

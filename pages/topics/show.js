@@ -84,7 +84,19 @@ Page({
     }
 
     this.setData({ topicId })
+    this.replyCreatedHandler = (payload = {}) => {
+      if (normalizeTopicId(payload.topicId) !== topicId) {
+        return
+      }
+
+      this.loadTopic(topicId)
+    }
+    eventHub.on('reply-created', this.replyCreatedHandler)
     this.loadTopic(topicId)
+  },
+
+  onUnload() {
+    eventHub.off('reply-created', this.replyCreatedHandler)
   },
 
   onShow() {
