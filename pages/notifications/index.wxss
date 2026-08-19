@@ -1,0 +1,56 @@
+.notifications-page {
+  min-height: 100vh;
+  padding-bottom: 32rpx;
+}
+
+.notification-panel {
+  margin-top: 0;
+}
+
+.notification-item {
+  align-items: flex-start;
+}
+
+.notification-avatar {
+  box-sizing: border-box;
+  display: block;
+  width: 100rpx;
+  height: 100rpx;
+  padding: 8rpx;
+  border: 1rpx solid #dddddd;
+  border-radius: 8rpx;
+}
+
+.notification-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  color: #333333;
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+.notification-user,
+.notification-topic {
+  color: #576b95;
+}
+
+.notification-action {
+  margin: 0 8rpx;
+}
+
+.notification-content {
+  margin-top: 8rpx;
+  color: #333333;
+  font-size: 26rpx;
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+.notification-meta {
+  margin-top: 10rpx;
+}
+
+.notification-retry {
+  padding: 32rpx;
+}
