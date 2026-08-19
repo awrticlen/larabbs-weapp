@@ -1,21 +1,37 @@
+const { createSyncBadgeMixin } = require('../../mixins/sync-badge')
+
 const getAuthState = () => getApp().syncAuthState()
+const syncBadge = createSyncBadgeMixin()
 
 Page({
+  ...syncBadge,
+
   data: {
+    ...syncBadge.data,
     loggedIn: false,
     user: null,
     loggingOut: false,
     errorMessage: ''
   },
 
+  onLoad() {
+    this.initUnreadBadge()
+  },
+
   onShow() {
     const authState = getAuthState()
+
+    this.refreshUnreadBadge()
 
     this.setData({
       loggedIn: authState.isLoggedIn,
       user: authState.user,
       errorMessage: ''
     })
+  },
+
+  onUnload() {
+    this.disposeUnreadBadge()
   },
 
   async logout() {

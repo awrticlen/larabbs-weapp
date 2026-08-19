@@ -1,6 +1,7 @@
 const { getCategories, getTopics } = require('../../api/topic')
 const { normalizeTopic } = require('../../utils/topic')
 const { createListRefreshMixin } = require('../../mixins/list-refresh')
+const { createSyncBadgeMixin } = require('../../mixins/sync-badge')
 const eventHub = require('../../utils/event-hub')
 
 const listRefresh = createListRefreshMixin({
@@ -16,6 +17,8 @@ const listRefresh = createListRefreshMixin({
   normalizeItem: normalizeTopic,
   fallbackErrorMessage: '获取话题失败，请稍后重试'
 })
+
+const syncBadge = createSyncBadgeMixin()
 
 const CATEGORY_STORAGE_KEY = 'categories'
 
@@ -48,9 +51,11 @@ const normalizeCategories = (categories) => (Array.isArray(categories) ? categor
 
 Page({
   ...listRefresh,
+  ...syncBadge,
 
   data: {
     ...listRefresh.data,
+    ...syncBadge.data,
     categories: [],
     currentCategoryId: null,
     currentCategoryName: '话题',
@@ -60,13 +65,19 @@ Page({
   },
 
   onLoad() {
+    this.initUnreadBadge()
     this.topicDeletedHandler = () => this.reloadList({ clear: true })
     eventHub.on('topic-deleted', this.topicDeletedHandler)
     this.loadCategories()
     this.reloadList()
   },
 
+  onShow() {
+    this.refreshUnreadBadge()
+  },
+
   onUnload() {
+    this.disposeUnreadBadge()
     eventHub.off('topic-deleted', this.topicDeletedHandler)
   },
 

@@ -39,7 +39,10 @@
       </navigator>
 
       <view class="weui-cell weui-cell_access">
-        <view class="weui-cell__bd">我的消息</view>
+        <view class="weui-cell__bd message-label">
+          <text>我的消息</text>
+          <view wx:if="{{unreadCount}}" class="weui-badge unread-count">{{unreadCount > 99 ? '99+' : unreadCount}}</view>
+        </view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
       </view>
       <navigator
