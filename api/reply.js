@@ -24,8 +24,16 @@ const createReply = (topicId, data = {}) => authRequest(`topics/${topicId}/repli
   data
 })
 
+const deleteReply = (topicId, replyId) => authRequest(`topics/${topicId}/replies/${replyId}`, {
+  method: 'DELETE',
+  header: {
+    Accept: 'application/json'
+  }
+})
+
 module.exports = {
   createReply,
+  deleteReply,
   getReplies,
   getUserReplies
 }

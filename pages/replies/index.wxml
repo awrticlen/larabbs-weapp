@@ -10,6 +10,7 @@
           replies="{{replies}}"
           no-more-data="{{noMoreData}}"
           show-no-more="{{true}}"
+          can-manage-topic="{{topicOwnerId && topicOwnerId === currentUserId}}"
         ></reply-list>
       </view>
     </view>

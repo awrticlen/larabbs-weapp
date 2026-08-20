@@ -1,7 +1,12 @@
 const { login: loginRequest, logout: logoutRequest, refresh: refreshRequest, register: registerRequest } = require('./api/auth')
-const { getCurrentUser, updateCurrentUser: updateCurrentUserRequest } = require('./api/user')
+const {
+  getCurrentUser,
+  getPerms: getPermsRequest,
+  updateCurrentUser: updateCurrentUserRequest
+} = require('./api/user')
 const { getNotificationStats } = require('./api/notification')
 const auth = require('./utils/auth')
+const eventHub = require('./utils/event-hub')
 const {
   emitUnreadCountUpdated,
   normalizeUnreadCount
@@ -22,6 +27,12 @@ const getLoginParams = async (credentials = {}) => {
 }
 
 const loginWithCode = async (credentials = {}) => loginRequest(await getLoginParams(credentials))
+
+const extractPermissions = (response) => {
+  const payload = response && response.data
+
+  return payload && Array.isArray(payload.data) ? payload.data : payload
+}
 
 App({
   globalData: {
@@ -44,6 +55,65 @@ App({
   syncAuthState() {
     this.globalData.auth = auth.getAuthState()
     return this.globalData.auth
+  },
+
+  can(targetPerm) {
+    const authState = this.syncAuthState()
+
+    if (!authState.isLoggedIn || !authState.permsLoaded || typeof targetPerm !== 'string' || !targetPerm) {
+      return false
+    }
+
+    return authState.perms.some((perm) => perm.name === targetPerm)
+  },
+
+  async loadPermissions() {
+    if (!auth.hasValidToken()) {
+      throw new Error('登录状态已失效')
+    }
+
+    const requestId = (this.permissionsRequestId || 0) + 1
+    this.permissionsRequestId = requestId
+    const response = await getPermsRequest()
+
+    if (requestId !== this.permissionsRequestId || !auth.hasValidToken()) {
+      return this.syncAuthState().perms
+    }
+
+    const perms = auth.setPerms(extractPermissions(response))
+    this.syncAuthState()
+    eventHub.emit('permissions-updated', perms)
+
+    return perms
+  },
+
+  async ensurePermissions() {
+    if (auth.hasPerms()) {
+      return this.syncAuthState().perms
+    }
+
+    if (this.permissionsPromise) {
+      return this.permissionsPromise
+    }
+
+    const request = this.loadPermissions()
+      .finally(() => {
+        if (this.permissionsPromise === request) {
+          this.permissionsPromise = null
+        }
+      })
+
+    this.permissionsPromise = request
+
+    return request
+  },
+
+  invalidatePermissions() {
+    this.permissionsRequestId = (this.permissionsRequestId || 0) + 1
+    this.permissionsPromise = null
+    auth.clearPerms()
+    this.syncAuthState()
+    eventHub.emit('permissions-updated', [])
   },
 
   getUnreadCount() {
@@ -128,6 +198,12 @@ App({
     }
 
     try {
+      await this.ensurePermissions()
+    } catch (error) {
+      this.syncAuthState()
+    }
+
+    try {
       return await this.updateUnreadCount()
     } catch (error) {
       return this.getUnreadCount()
@@ -156,9 +232,11 @@ App({
 
   async login(credentials = {}) {
     const response = await loginWithCode(credentials)
+    this.invalidatePermissions()
     auth.setToken(response.data)
     this.syncAuthState()
     await this.loadCurrentUser()
+    await this.loadPermissions()
     this.updateUnreadCount().catch(() => {})
 
     return this.globalData.auth
@@ -177,9 +255,11 @@ App({
     }
 
     const response = await refreshRequest(token)
+    this.invalidatePermissions()
     auth.setToken(response.data)
     this.syncAuthState()
     await this.loadCurrentUser()
+    await this.loadPermissions()
     this.updateUnreadCount().catch(() => {})
 
     return this.globalData.auth
@@ -216,7 +296,7 @@ App({
       }
     } finally {
       auth.logout()
-      this.syncAuthState()
+      this.invalidatePermissions()
       this.resetUnreadCount()
     }
   }

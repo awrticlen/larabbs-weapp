@@ -1,0 +1,27 @@
+.reply-delete-wrap {
+  flex: 0 0 auto;
+  width: 40rpx;
+  margin-left: 16rpx;
+  padding-top: 4rpx;
+  text-align: center;
+}
+
+.reply-delete {
+  display: block;
+  width: 40rpx;
+  height: 40rpx;
+  opacity: 0.7;
+}
+
+.reply-delete:active {
+  opacity: 0.45;
+}
+
+.reply-delete__error {
+  width: 160rpx;
+  margin-top: 6rpx;
+  margin-left: -60rpx;
+  color: #fa5151;
+  font-size: 20rpx;
+  line-height: 1.3;
+}

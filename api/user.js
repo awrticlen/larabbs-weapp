@@ -22,6 +22,13 @@ const updateCurrentUser = (data) => authRequest('user', {
   data
 })
 
+const getPerms = () => authRequest('user/permissions', {
+  method: 'GET',
+  header: {
+    Accept: 'application/json'
+  }
+})
+
 const uploadAvatar = (filePath) => uploadFile('images', {
   filePath,
   name: 'image',
@@ -36,6 +43,7 @@ const uploadAvatar = (filePath) => uploadFile('images', {
 module.exports = {
   getUser,
   getCurrentUser,
+  getPerms,
   updateCurrentUser,
   uploadAvatar
 }

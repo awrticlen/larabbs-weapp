@@ -31,15 +31,17 @@ const getErrorMessage = (error, fallback = '获取话题失败，请稍后重试
 }
 
 const canDeleteTopic = (topic) => {
-  const authState = getApp().syncAuthState()
+  const app = getApp()
+  const authState = app.syncAuthState()
   const currentUserId = authState.user && Number(authState.user.id)
   const authorId = topic && Number(topic.userId)
+  const canManageContents = typeof app.can === 'function' && app.can('manage_contents')
 
   return Boolean(
     authState.isLoggedIn
       && currentUserId
       && authorId
-      && currentUserId === authorId
+      && (currentUserId === authorId || canManageContents)
   )
 }
 
@@ -84,6 +86,12 @@ Page({
     }
 
     this.setData({ topicId })
+    this.permissionsUpdatedHandler = () => {
+      if (this.data.topic) {
+        this.setData({ canDelete: canDeleteTopic(this.data.topic) })
+      }
+    }
+    eventHub.on('permissions-updated', this.permissionsUpdatedHandler)
     this.replyCreatedHandler = (payload = {}) => {
       if (normalizeTopicId(payload.topicId) !== topicId) {
         return
@@ -92,11 +100,21 @@ Page({
       this.loadTopic(topicId)
     }
     eventHub.on('reply-created', this.replyCreatedHandler)
+    this.replyDeletedHandler = (reply = {}) => {
+      if (normalizeTopicId(reply.topicId) !== topicId) {
+        return
+      }
+
+      this.loadTopic(topicId)
+    }
+    eventHub.on('reply-deleted', this.replyDeletedHandler)
     this.loadTopic(topicId)
   },
 
   onUnload() {
+    eventHub.off('permissions-updated', this.permissionsUpdatedHandler)
     eventHub.off('reply-created', this.replyCreatedHandler)
+    eventHub.off('reply-deleted', this.replyDeletedHandler)
   },
 
   onShow() {

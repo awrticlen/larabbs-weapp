@@ -21,8 +21,11 @@
       </navigator>
       <rich-text wx:if="{{item.content}}" class="weui-media-box__desc reply-content" nodes="{{item.content}}"></rich-text>
       <view wx:else class="weui-media-box__desc reply-content">暂无内容</view>
-      <view class="weui-media-box__desc reply-time">{{item.createdAtText}}</view>
     </view>
+    <reply-delete
+      reply="{{item}}"
+      can-manage-topic="{{canManageTopic}}"
+    ></reply-delete>
   </view>
 </block>
 

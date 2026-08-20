@@ -1,0 +1,9 @@
+<view wx:if="{{canDelete}}" class="reply-delete-wrap">
+  <image
+    class="reply-delete"
+    mode="aspectFit"
+    src="/assets/images/trash.png"
+    bindtap="handleDelete"
+  />
+  <view wx:if="{{errorMessage}}" class="reply-delete__error">{{errorMessage}}</view>
+</view>

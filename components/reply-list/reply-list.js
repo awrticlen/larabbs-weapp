@@ -15,6 +15,10 @@ Component({
     showTopic: {
       type: Boolean,
       value: false
+    },
+    canManageTopic: {
+      type: Boolean,
+      value: false
     }
   }
 })

@@ -1,6 +1,7 @@
 const { getUserReplies } = require('../../api/reply')
 const { createListRefreshMixin } = require('../../mixins/list-refresh')
 const { normalizeReply } = require('../../utils/reply')
+const eventHub = require('../../utils/event-hub')
 
 const normalizeUserId = (value) => {
   const id = Number(value)
@@ -35,6 +36,18 @@ Page({
     }
 
     this.setData({ userId })
+    this.replyDeletedHandler = (reply = {}) => {
+      const replyId = Number(reply.id)
+
+      this.setData({
+        replies: this.data.replies.filter((item) => Number(item.id) !== replyId)
+      })
+    }
+    eventHub.on('reply-deleted', this.replyDeletedHandler)
     this.reloadList({ clear: true })
+  },
+
+  onUnload() {
+    eventHub.off('reply-deleted', this.replyDeletedHandler)
   }
 })
