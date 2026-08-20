@@ -64,6 +64,16 @@ Page({
     this.loadUser(userId)
   },
 
+  onShareAppMessage() {
+    const user = this.data.user || {}
+
+    return {
+      title: user.name || '用户主页',
+      path: `/pages/users/show?id=${this.data.userId || user.id || ''}`,
+      imageUrl: user.avatar || DEFAULT_AVATAR
+    }
+  },
+
   retryLoad() {
     if (this.data.userId) {
       return this.loadUser(this.data.userId)

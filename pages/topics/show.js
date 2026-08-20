@@ -111,6 +111,15 @@ Page({
     this.loadTopic(topicId)
   },
 
+  onShareAppMessage() {
+    const topic = this.data.topic || {}
+
+    return {
+      title: topic.title || '话题详情',
+      path: `/pages/topics/show?id=${this.data.topicId || topic.id || ''}`
+    }
+  },
+
   onUnload() {
     eventHub.off('permissions-updated', this.permissionsUpdatedHandler)
     eventHub.off('reply-created', this.replyCreatedHandler)
